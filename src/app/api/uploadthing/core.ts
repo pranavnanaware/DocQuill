@@ -53,7 +53,6 @@ export const ourFileRouter = {
           },
         });
       } catch (err) {
-        console.error(err);
         await db.file.update({
           data: {
             uploadStatus: "FAILED",

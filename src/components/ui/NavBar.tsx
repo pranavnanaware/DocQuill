@@ -7,8 +7,8 @@ import {
 import { ArrowRight } from "lucide-react";
 import MaxWidthWrapper from "../MaxWidthWrapper";
 import { buttonVariants } from "./button";
-import MobileNav from "../MobileNav";
 import UserAccountNav from "../UserAccountNav";
+import MobileNav from "../MobileNav";
 
 const Navbar = async () => {
   const { getUser } = getKindeServerSession();
@@ -19,7 +19,7 @@ const Navbar = async () => {
       <MaxWidthWrapper>
         <div className="flex h-14 items-center justify-between border-b border-zinc-200">
           <Link href="/" className="flex z-40 font-semibold">
-            <span>DocQuill.</span>
+            <span>quill.</span>
           </Link>
 
           <MobileNav isAuth={!!user} />

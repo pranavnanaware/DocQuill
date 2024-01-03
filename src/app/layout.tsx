@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import { cn, constructMetadata } from "@/lib/utils";
-import NavBar from "@/components/ui/NavBar";
+import NavBar from "@/components/NavBar";
 import Providers from "@/components/ui/Providers";
 import "react-loading-skeleton/dist/skeleton.css";
 import { Toaster } from "@/components/ui/toaster";

@@ -5,15 +5,15 @@ import { createUploadthing, type FileRouter } from "uploadthing/next";
 import { PDFLoader } from "langchain/document_loaders/fs/pdf";
 import { OpenAIEmbeddings } from "langchain/embeddings/openai";
 import { PineconeStore } from "langchain/vectorstores/pinecone";
+import { pinecone } from "@/lib/pinecone";
 import { getUserSubscriptionPlan } from "@/lib/stripe";
 import { PLANS } from "@/config/stripe";
-import { pinecone } from "@/lib/pinecone";
 
 const f = createUploadthing();
 
 const middleware = async () => {
   const { getUser } = getKindeServerSession();
-  const user = await getUser();
+  const user = getUser();
 
   if (!user || !user.id) throw new Error("Unauthorized");
 
@@ -82,7 +82,7 @@ const onUploadComplete = async ({
     }
 
     // vectorize and index entire document
-    const pineconeIndex = pinecone.Index("quill");
+    const pineconeIndex = pinecone.Index("docquill");
 
     const embeddings = new OpenAIEmbeddings({
       openAIApiKey: process.env.OPENAI_API_KEY,

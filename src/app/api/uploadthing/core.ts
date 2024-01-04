@@ -13,7 +13,7 @@ const f = createUploadthing();
 
 const middleware = async () => {
   const { getUser } = getKindeServerSession();
-  const user = getUser();
+  const user = await getUser();
 
   if (!user || !user.id) throw new Error("Unauthorized");
 
@@ -79,28 +79,28 @@ const onUploadComplete = async ({
           id: createdFile.id,
         },
       });
+    } else {
+      // vectorize and index entire document
+      const pineconeIndex = pinecone.Index("docquill");
+
+      const embeddings = new OpenAIEmbeddings({
+        openAIApiKey: process.env.OPENAI_API_KEY,
+      });
+
+      await PineconeStore.fromDocuments(pageLevelDocs, embeddings, {
+        pineconeIndex,
+        namespace: createdFile.id,
+      });
+
+      await db.file.update({
+        data: {
+          uploadStatus: "SUCCESS",
+        },
+        where: {
+          id: createdFile.id,
+        },
+      });
     }
-
-    // vectorize and index entire document
-    const pineconeIndex = pinecone.Index("docquill");
-
-    const embeddings = new OpenAIEmbeddings({
-      openAIApiKey: process.env.OPENAI_API_KEY,
-    });
-
-    await PineconeStore.fromDocuments(pageLevelDocs, embeddings, {
-      pineconeIndex,
-      namespace: createdFile.id,
-    });
-
-    await db.file.update({
-      data: {
-        uploadStatus: "SUCCESS",
-      },
-      where: {
-        id: createdFile.id,
-      },
-    });
   } catch (err) {
     await db.file.update({
       data: {
